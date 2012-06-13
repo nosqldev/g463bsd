@@ -1,0 +1,158 @@
+--- /usr/src/Makefile.inc1	2012-06-13 18:07:05.000000000 +0800
++++ Makefile.inc1_step1	2012-06-13 18:07:26.000000000 +0800
+@@ -450,73 +450,73 @@
+ 	@echo ">>> stage 4.4: building everything"
+ 	@echo "--------------------------------------------------------------"
+ 	${_+_}cd ${.CURDIR}; ${WMAKE} par-all
+-.if defined(LIB32TMP)
++#.if defined(LIB32TMP)
+ build32:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 5.1: building 32 bit shim libraries"
+ 	@echo "--------------------------------------------------------------"
+-	mkdir -p ${LIB32TMP}/usr/include
+-	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.usr.dist \
+-	    -p ${LIB32TMP}/usr >/dev/null
+-	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.include.dist \
+-	    -p ${LIB32TMP}/usr/include >/dev/null
+-	mkdir -p ${WORLDTMP}
+-	ln -sf ${.CURDIR}/sys ${WORLDTMP}
+-.if ${MK_KERBEROS} != "no"
+-.for _t in obj depend all
+-	cd ${.CURDIR}/kerberos5/tools; \
+-	    MAKEOBJDIRPREFIX=${OBJTREE}/lib32 ${MAKE} SSP_CFLAGS= DESTDIR= \
+-	    DIRPRFX=kerberos5/tools/ ${_t}
+-.endfor
+-.endif
+-.for _t in obj includes
+-	cd ${.CURDIR}/include; ${LIB32WMAKE} DIRPRFX=include/ ${_t}
+-	cd ${.CURDIR}/lib; ${LIB32WMAKE} DIRPRFX=lib/ ${_t}
+-.if ${MK_CDDL} != "no"
+-	cd ${.CURDIR}/cddl/lib; ${LIB32WMAKE} DIRPRFX=cddl/lib/ ${_t}
+-.endif
+-	cd ${.CURDIR}/gnu/lib; ${LIB32WMAKE} DIRPRFX=gnu/lib/ ${_t}
+-.if ${MK_CRYPT} != "no"
+-	cd ${.CURDIR}/secure/lib; ${LIB32WMAKE} DIRPRFX=secure/lib/ ${_t}
+-.endif
+-.if ${MK_KERBEROS} != "no"
+-	cd ${.CURDIR}/kerberos5/lib; ${LIB32WMAKE} DIRPRFX=kerberos5/lib ${_t}
+-.endif
+-.endfor
+-.for _dir in usr.bin/lex/lib
+-	cd ${.CURDIR}/${_dir}; ${LIB32WMAKE} DIRPRFX=${_dir}/ obj
+-.endfor
+-.for _dir in lib/ncurses/ncurses lib/ncurses/ncursesw lib/libmagic
+-	cd ${.CURDIR}/${_dir}; \
+-	    MAKEOBJDIRPREFIX=${OBJTREE}/lib32 ${MAKE} SSP_CFLAGS= DESTDIR= \
+-	    DIRPRFX=${_dir}/ build-tools
+-.endfor
+-	cd ${.CURDIR}; \
+-	    ${LIB32WMAKE} -f Makefile.inc1 libraries
+-.for _t in obj depend all
+-	cd ${.CURDIR}/libexec/rtld-elf; PROG=ld-elf32.so.1 ${LIB32WMAKE} \
+-	    DIRPRFX=libexec/rtld-elf/ ${_t}
+-	cd ${.CURDIR}/usr.bin/ldd; PROG=ldd32 ${LIB32WMAKE} \
+-	    DIRPRFX=usr.bin/ldd ${_t}
+-.endfor
+-
+-distribute32 install32:
+-	cd ${.CURDIR}/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.if ${MK_CDDL} != "no"
+-	cd ${.CURDIR}/cddl/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.endif
+-	cd ${.CURDIR}/gnu/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.if ${MK_CRYPT} != "no"
+-	cd ${.CURDIR}/secure/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.endif
+-.if ${MK_KERBEROS} != "no"
+-	cd ${.CURDIR}/kerberos5/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.endif
+-	cd ${.CURDIR}/libexec/rtld-elf; \
+-	    PROG=ld-elf32.so.1 ${LIB32IMAKE} ${.TARGET:S/32$//}
+-	cd ${.CURDIR}/usr.bin/ldd; PROG=ldd32 ${LIB32IMAKE} ${.TARGET:S/32$//}
+-.endif
++#	mkdir -p ${LIB32TMP}/usr/include
++#	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.usr.dist \
++#	    -p ${LIB32TMP}/usr >/dev/null
++#	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.include.dist \
++#	    -p ${LIB32TMP}/usr/include >/dev/null
++#	mkdir -p ${WORLDTMP}
++#	ln -sf ${.CURDIR}/sys ${WORLDTMP}
++#.if ${MK_KERBEROS} != "no"
++#.for _t in obj depend all
++#	cd ${.CURDIR}/kerberos5/tools; \
++#	    MAKEOBJDIRPREFIX=${OBJTREE}/lib32 ${MAKE} SSP_CFLAGS= DESTDIR= \
++#	    DIRPRFX=kerberos5/tools/ ${_t}
++#.endfor
++#.endif
++#.for _t in obj includes
++#	cd ${.CURDIR}/include; ${LIB32WMAKE} DIRPRFX=include/ ${_t}
++#	cd ${.CURDIR}/lib; ${LIB32WMAKE} DIRPRFX=lib/ ${_t}
++#.if ${MK_CDDL} != "no"
++#	cd ${.CURDIR}/cddl/lib; ${LIB32WMAKE} DIRPRFX=cddl/lib/ ${_t}
++#.endif
++#	cd ${.CURDIR}/gnu/lib; ${LIB32WMAKE} DIRPRFX=gnu/lib/ ${_t}
++#.if ${MK_CRYPT} != "no"
++#	cd ${.CURDIR}/secure/lib; ${LIB32WMAKE} DIRPRFX=secure/lib/ ${_t}
++#.endif
++#.if ${MK_KERBEROS} != "no"
++#	cd ${.CURDIR}/kerberos5/lib; ${LIB32WMAKE} DIRPRFX=kerberos5/lib ${_t}
++#.endif
++#.endfor
++#.for _dir in usr.bin/lex/lib
++#	cd ${.CURDIR}/${_dir}; ${LIB32WMAKE} DIRPRFX=${_dir}/ obj
++#.endfor
++#.for _dir in lib/ncurses/ncurses lib/ncurses/ncursesw lib/libmagic
++#	cd ${.CURDIR}/${_dir}; \
++#	    MAKEOBJDIRPREFIX=${OBJTREE}/lib32 ${MAKE} SSP_CFLAGS= DESTDIR= \
++#	    DIRPRFX=${_dir}/ build-tools
++#.endfor
++#	cd ${.CURDIR}; \
++#	    ${LIB32WMAKE} -f Makefile.inc1 libraries
++#.for _t in obj depend all
++#	cd ${.CURDIR}/libexec/rtld-elf; PROG=ld-elf32.so.1 ${LIB32WMAKE} \
++#	    DIRPRFX=libexec/rtld-elf/ ${_t}
++#	cd ${.CURDIR}/usr.bin/ldd; PROG=ldd32 ${LIB32WMAKE} \
++#	    DIRPRFX=usr.bin/ldd ${_t}
++#.endfor
++#
++#distribute32 install32:
++#	cd ${.CURDIR}/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.if ${MK_CDDL} != "no"
++#	cd ${.CURDIR}/cddl/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.endif
++#	cd ${.CURDIR}/gnu/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.if ${MK_CRYPT} != "no"
++#	cd ${.CURDIR}/secure/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.endif
++#.if ${MK_KERBEROS} != "no"
++#	cd ${.CURDIR}/kerberos5/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.endif
++#	cd ${.CURDIR}/libexec/rtld-elf; \
++#	    PROG=ld-elf32.so.1 ${LIB32IMAKE} ${.TARGET:S/32$//}
++#	cd ${.CURDIR}/usr.bin/ldd; PROG=ldd32 ${LIB32IMAKE} ${.TARGET:S/32$//}
++#.endif
+ 
+ WMAKE_TGTS=
+ .if !defined(SUBDIR_OVERRIDE)
+--- /usr/src/sys/boot/i386/Makefile.inc	2012-06-13 18:07:05.000000000 +0800
++++ Makefile.inc.new	2012-06-13 16:25:41.000000000 +0800
+@@ -4,6 +4,7 @@
+ 
+ BINDIR?=	/boot
+ 
++CC=cc
+ LOADER_ADDRESS?=0x200000
+ CFLAGS+=	-ffreestanding -mpreferred-stack-boundary=2 \
+ 		-mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-sse3 -msoft-float
+--- /usr/src/sys/boot/i386/boot2/Makefile	2012-06-13 18:07:05.000000000 +0800
++++ Makefile.new	2012-06-13 17:08:28.000000000 +0800
+@@ -26,7 +26,6 @@
+ 	-fno-guess-branch-probability \
+ 	-fomit-frame-pointer \
+ 	-fno-unit-at-a-time \
+-	-mno-align-long-strings \
+ 	-mrtd \
+ 	-mregparm=3 \
+ 	-DUSE_XREAD \

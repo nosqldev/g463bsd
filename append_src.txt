@@ -1,0 +1,3 @@
+# ------------------ APPEND BY buildenv.sh ---------------------
+WITHOUT_CXX=true
+# ------------------ EOL [buildenv.sh] ---------------------

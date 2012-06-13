@@ -1,0 +1,84 @@
+--- /usr/src/Makefile.inc1	2012-06-13 17:01:10.000000000 +0800
++++ Makefile.inc1_step2	2012-06-13 16:47:42.000000000 +0800
+@@ -388,22 +388,22 @@
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 1.1: legacy release compatibility shims"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${BMAKE} legacy
++#	${_+_}cd ${.CURDIR}; ${BMAKE} legacy
+ _bootstrap-tools:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 1.2: bootstrap tools"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${BMAKE} bootstrap-tools
++#	${_+_}cd ${.CURDIR}; ${BMAKE} bootstrap-tools
+ _cleanobj:
+ .if !defined(NO_CLEAN)
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 2.1: cleaning up the object tree"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${WMAKE} ${CLEANDIR:S/^/par-/}
++#	${_+_}cd ${.CURDIR}; ${WMAKE} ${CLEANDIR:S/^/par-/}
+ .if defined(LIB32TMP)
+-	${_+_}cd ${.CURDIR}; ${LIB32WMAKE} -f Makefile.inc1 ${CLEANDIR:S/^/par-/}
++#	${_+_}cd ${.CURDIR}; ${LIB32WMAKE} -f Makefile.inc1 ${CLEANDIR:S/^/par-/}
+ .endif
+ .endif
+ _obj:
+@@ -411,45 +411,45 @@
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 2.2: rebuilding the object tree"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${WMAKE} par-obj
++#	${_+_}cd ${.CURDIR}; ${WMAKE} par-obj
+ _build-tools:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 2.3: build tools"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${TMAKE} build-tools
++#	${_+_}cd ${.CURDIR}; ${TMAKE} build-tools
+ _cross-tools:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 3: cross tools"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${XMAKE} cross-tools
++#	${_+_}cd ${.CURDIR}; ${XMAKE} cross-tools
+ _includes:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 4.1: building includes"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${WMAKE} SHARED=symlinks par-includes
++#	${_+_}cd ${.CURDIR}; ${WMAKE} SHARED=symlinks par-includes
+ _libraries:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 4.2: building libraries"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; \
+-	    ${WMAKE} -DNO_FSCHG -DWITHOUT_HTML -DWITHOUT_INFO -DNO_LINT \
+-	    -DWITHOUT_MAN -DWITHOUT_PROFILE libraries
++#	${_+_}cd ${.CURDIR}; \
++#	    ${WMAKE} -DNO_FSCHG -DWITHOUT_HTML -DWITHOUT_INFO -DNO_LINT \
++#	    -DWITHOUT_MAN -DWITHOUT_PROFILE libraries
+ _depend:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 4.3: make dependencies"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${WMAKE} par-depend
++#	${_+_}cd ${.CURDIR}; ${WMAKE} par-depend
+ everything:
+ 	@echo
+ 	@echo "--------------------------------------------------------------"
+ 	@echo ">>> stage 4.4: building everything"
+ 	@echo "--------------------------------------------------------------"
+-	${_+_}cd ${.CURDIR}; ${WMAKE} par-all
++#	${_+_}cd ${.CURDIR}; ${WMAKE} par-all
+ .if defined(LIB32TMP)
+ build32:
+ 	@echo
