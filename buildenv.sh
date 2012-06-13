@@ -84,7 +84,6 @@ run_cmd "pkg_add -r gmp"
 run_cmd "pkg_add -r zip"
 run_cmd "pkg_add -r binutils"
 run_cmd "pkg_add -r math_mpc"
-run_cmd "pkg_add -r mpfr"
 
 # }}}
 # {{{ Download & Install GCC 4.6.3
