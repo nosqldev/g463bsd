@@ -180,6 +180,8 @@ update_config()
 
 buildworld()
 {
+    update_config
+
     cd $RUN_DIR
     patch -p0 < src.patch
     assert_cmd "patch -p0 < src.patch"
@@ -221,6 +223,7 @@ buildworld()
 
 buildkernel()
 {
+    update_config
     cd /usr/src
     echo 'CC=/lib/gcc46/bin/cc' >> /etc/make.conf
     echo 'CXX=/lib/gcc46/bin/g++' >> /etc/make.conf
@@ -235,7 +238,6 @@ install_packages
 install_gcc
 update_src_tree
 md5_check
-update_config
 buildworld
 buildkernel
 
