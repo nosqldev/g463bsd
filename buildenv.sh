@@ -226,10 +226,17 @@ buildworld()
 buildkernel()
 {
     update_config
-    cd /usr/src
+
+    sed -i '' '/EOL/d' /etc/make.conf
+    assert_cmd "sed -i '' '/EOL/d' /etc/make.conf"
     echo 'CC=/lib/gcc46/bin/cc' >> /etc/make.conf
     echo 'CXX=/lib/gcc46/bin/g++' >> /etc/make.conf
+    echo '# ------------------ EOL [buildenv.sh] ---------------------' >> /etc/make.conf
+
+    cd $RUN_DIR
     run_cmd "cp DOG /usr/src/sys/amd64/conf"
+
+    cd /usr/src
     make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
     assert_cmd "make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1"
 }
