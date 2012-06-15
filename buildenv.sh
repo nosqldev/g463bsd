@@ -84,6 +84,7 @@ run_cmd "pkg_add -r gmp"
 run_cmd "pkg_add -r zip"
 run_cmd "pkg_add -r binutils"
 run_cmd "pkg_add -r math_mpc"
+run_cmd "pkg_add -r mpfr"
 
 # }}}
 # {{{ Download & Install GCC 4.6.3
@@ -99,7 +100,7 @@ cd gcc/gcc-4.6.3
 run_cmd "mkdir -p objdir"
 cd objdir
 run_cmd "../configure --prefix=/lib/gcc46"
-run_cmd "gmake -j4"
+run_cmd "gmake"
 run_cmd "gmake install"
 
 # }}}
