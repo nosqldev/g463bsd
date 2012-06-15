@@ -22,7 +22,7 @@ warn_puts()
     printf "\033[01;33;41m$1\033[00m\n"
 }
 
-md5_check()
+do_md5_check()
 {
     MD5SUM=`md5 -q $1`
     if [ "$MD5SUM" != "$2" ]
@@ -30,6 +30,7 @@ md5_check()
         warn_puts "$1 md5 checksum is incorrect"
         exit 1
     fi
+    gputs "$1 md5 ok"
 }
 
 print_help()
@@ -133,12 +134,12 @@ update_src_tree()
 
 md5_check()
 {
-    md5_check "/usr/include/openssl/ssl.h" "19588a1c8a27ab814ab6d52843e36cc1"
-    md5_check "/usr/include/openssl/ssl3.h" "b9d8d0222a7fba6be5abd77099f6ada2"
-    md5_check "/usr/src/Makefile.inc1" "e1e184f56d8321b4b3531103864e5ce8"
-    md5_check "/usr/src/sbin/hastd/pjdlog.c" "991b375cd7c3822ad0d9d7eb133fb601"
-    md5_check "/usr/src/sys/boot/i386/Makefile.inc" "247c077b00fb21a12d3b576c3436db24"
-    md5_check "/usr/src/sys/boot/i386/boot2/Makefile" "3e062164e7b28c9b42cb7194e9cc7cd9"
+    do_md5_check "/usr/include/openssl/ssl.h" "19588a1c8a27ab814ab6d52843e36cc1"
+    do_md5_check "/usr/include/openssl/ssl3.h" "b9d8d0222a7fba6be5abd77099f6ada2"
+    do_md5_check "/usr/src/Makefile.inc1" "e1e184f56d8321b4b3531103864e5ce8"
+    do_md5_check "/usr/src/sbin/hastd/pjdlog.c" "991b375cd7c3822ad0d9d7eb133fb601"
+    do_md5_check "/usr/src/sys/boot/i386/Makefile.inc" "247c077b00fb21a12d3b576c3436db24"
+    do_md5_check "/usr/src/sys/boot/i386/boot2/Makefile" "3e062164e7b28c9b42cb7194e9cc7cd9"
 }
 
 # }}}
