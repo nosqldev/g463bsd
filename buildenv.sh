@@ -103,6 +103,9 @@ run_cmd "../configure --prefix=/lib/gcc46"
 run_cmd "gmake"
 run_cmd "gmake install"
 
+ln -s /lib/gcc46/bin/gcc /lib/gcc46/bin/cc
+ln -s /lib/gcc46/bin/g++ /lib/gcc46/bin/c++
+
 # }}}
 # {{{ Update Source Tree
 
@@ -161,11 +164,9 @@ assert_cmd "patch -p0 < src.patch"
 patch -p0 < makefile_step1.patch
 assert_cmd "patch -p0 < makefile_step1.patch"
 
-run_cmd "cp DOG /usr/src/sys/amd64/conf"
 cd /usr/src
 run_cmd "make clean"
 run_cmd "rm -rf /usr/obj/*"
-run_cmd "make buildkernel KERNCONF=DOG"
 cputs "begin to buildworld step 1"
 make buildworld > ~/buildworld_step1.log 2>&1
 assert_cmd "make buildworld > ~/buildworld_step1.log 2>&1"
@@ -187,4 +188,12 @@ assert_cmd "make NO_CLEAN=yes buildworld > ~/buildworld_step2.log 2>&1"
 cd $RUN_DIR
 patch -p0 -R < src.patch
 assert_cmd "patch -p0 -R < src.patch"
+patch -p0 -R < makefile_step2.patch
+assert_cmd "patch -p0 -R < makefile_step2.patch"
+
+echo 'CC=/lib/gcc46/bin/cc' >> /etc/make.conf
+echo 'CXX=/lib/gcc46/bin/g++' >> /etc/make.conf
+run_cmd "cp DOG /usr/src/sys/amd64/conf"
+make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
+assert_cmd "make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1"
 # vim: foldmethod=marker
