@@ -2,6 +2,9 @@
 
 KERNCONF='DOG'
 
+RUN_DIR=`pwd`
+export LANG="C"
+
 # {{{ Basic Functions
 
 gputs()
@@ -66,134 +69,174 @@ assert_cmd()
 # }}}
 # {{{ Install Packages
 
-RUN_DIR=`pwd`
-export LANG="C"
-
-run_cmd "pkg_add -r git"
-run_cmd "pkg_add -r screen"
-cd /usr/ports/editors/vim
-gputs "cd /usr/ports/editors/vim"
-run_cmd "make NO_GUI=yes WITH_CSCOPE=yes install clean"
-run_cmd "pkg_add -r cvsup-without-gui"
-run_cmd "pkg_add -r wget"
-run_cmd "pkg_add -r lftp"
-run_cmd "pkg_add -r pciutils"
-run_cmd "pkg_add -r gmake"
-run_cmd "pkg_add -r mercurial"
-run_cmd "pkg_add -r gmp"
-run_cmd "pkg_add -r zip"
-run_cmd "pkg_add -r binutils"
-run_cmd "pkg_add -r math_mpc"
-run_cmd "pkg_add -r mpfr"
+install_packages()
+{
+    run_cmd "pkg_add -r git"
+    run_cmd "pkg_add -r screen"
+    cd /usr/ports/editors/vim
+    gputs "cd /usr/ports/editors/vim"
+    run_cmd "make NO_GUI=yes WITH_CSCOPE=yes install clean"
+    run_cmd "pkg_add -r cvsup-without-gui"
+    run_cmd "pkg_add -r wget"
+    run_cmd "pkg_add -r lftp"
+    run_cmd "pkg_add -r pciutils"
+    run_cmd "pkg_add -r gmake"
+    run_cmd "pkg_add -r mercurial"
+    run_cmd "pkg_add -r gmp"
+    run_cmd "pkg_add -r zip"
+    run_cmd "pkg_add -r binutils"
+    run_cmd "pkg_add -r math_mpc"
+    run_cmd "pkg_add -r mpfr"
+}
 
 # }}}
 # {{{ Download & Install GCC 4.6.3
 
-cd
-run_cmd "mkdir gcc"
-cd gcc
-run_cmd "wget ftp://ftp.dti.ad.jp/pub/lang/gcc/releases/gcc-4.6.3/gcc-4.6.3.tar.bz2"
-run_cmd "tar xfvj gcc-4.6.3.tar.bz2"
+install_gcc()
+{
+    cd
+    run_cmd "mkdir gcc"
+    cd gcc
+    run_cmd "wget ftp://ftp.dti.ad.jp/pub/lang/gcc/releases/gcc-4.6.3/gcc-4.6.3.tar.bz2"
+    run_cmd "tar xfvj gcc-4.6.3.tar.bz2"
 
-cd
-cd gcc/gcc-4.6.3
-run_cmd "mkdir -p objdir"
-cd objdir
-run_cmd "../configure --prefix=/lib/gcc46"
-run_cmd "gmake"
-run_cmd "gmake install"
+    cd
+    cd gcc/gcc-4.6.3
+    run_cmd "mkdir -p objdir"
+    cd objdir
+    run_cmd "../configure --prefix=/lib/gcc46"
+    run_cmd "gmake"
+    run_cmd "gmake install"
 
-ln -s /lib/gcc46/bin/gcc /lib/gcc46/bin/cc
-ln -s /lib/gcc46/bin/g++ /lib/gcc46/bin/c++
+    ln -s /lib/gcc46/bin/gcc /lib/gcc46/bin/cc
+    ln -s /lib/gcc46/bin/g++ /lib/gcc46/bin/c++
+}
 
 # }}}
 # {{{ Update Source Tree
 
-cd $RUN_DIR
-run_cmd "cp /usr/share/examples/cvsup/ports-supfile ."
-run_cmd "cp /usr/share/examples/cvsup/stable-supfile ."
-sed -i.bak 's/CHANGE_THIS/cvsup3/' ports-supfile
-sed -i.bak 's/RELENG_9/RELENG_9_0/' stable-supfile
-sed -i.bak 's/CHANGE_THIS/cvsup/' stable-supfile
-run_cmd "cvsup -g -L 2 stable-supfile"
-run_cmd "cvsup -g -L 2 ports-supfile"
+update_src_tree()
+{
+    cd $RUN_DIR
+    run_cmd "cp /usr/share/examples/cvsup/ports-supfile ."
+    run_cmd "cp /usr/share/examples/cvsup/stable-supfile ."
+    sed -i.bak 's/CHANGE_THIS/cvsup3/' ports-supfile
+    sed -i.bak 's/RELENG_9/RELENG_9_0/' stable-supfile
+    sed -i.bak 's/CHANGE_THIS/cvsup/' stable-supfile
+    run_cmd "cvsup -g -L 2 stable-supfile"
+    run_cmd "cvsup -g -L 2 ports-supfile"
+}
+
+# }}}
+# {{{ md5 check
+
+md5_check()
+{
+    md5_check "/usr/include/openssl/ssl.h" "19588a1c8a27ab814ab6d52843e36cc1"
+    md5_check "/usr/include/openssl/ssl3.h" "b9d8d0222a7fba6be5abd77099f6ada2"
+    md5_check "/usr/src/Makefile.inc1" "e1e184f56d8321b4b3531103864e5ce8"
+    md5_check "/usr/src/sbin/hastd/pjdlog.c" "991b375cd7c3822ad0d9d7eb133fb601"
+    md5_check "/usr/src/sys/boot/i386/Makefile.inc" "247c077b00fb21a12d3b576c3436db24"
+    md5_check "/usr/src/sys/boot/i386/boot2/Makefile" "3e062164e7b28c9b42cb7194e9cc7cd9"
+}
 
 # }}}
 # {{{ Update Configurations: /etc
-# {{{ libmap.conf
 
-cd $RUN_DIR
-touch /etc/libmap.conf
-sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/libmap.conf
-cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/libmap.conf"
-cat append_libmap.txt >> /etc/libmap.conf
-cputs "cat append_libmap.txt >> /etc/libmap.conf"
+update_config()
+{
+    # {{{ libmap.conf
+
+    cd $RUN_DIR
+    touch /etc/libmap.conf
+    sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/libmap.conf
+    cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/libmap.conf"
+    cat append_libmap.txt >> /etc/libmap.conf
+    cputs "cat append_libmap.txt >> /etc/libmap.conf"
+
+    # }}}
+    # {{{ make.conf
+
+    touch /etc/make.conf
+    sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/make.conf
+    cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/make.conf"
+    cat append_make.txt >> /etc/make.conf
+    cputs "cat append_make.txt >> /etc/make.conf"
+
+    # }}}
+    # {{{ src.conf
+
+    touch /etc/src.conf
+    sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/src.conf
+    cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/src.conf"
+    cat append_src.txt >> /etc/src.conf
+    cputs "cat append_src.txt >> /etc/src.conf"
+
+    # }}}
+}
 
 # }}}
-# {{{ make.conf
+# {{{ build world
 
-touch /etc/make.conf
-sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/make.conf
-cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/make.conf"
-cat append_make.txt >> /etc/make.conf
-cputs "cat append_make.txt >> /etc/make.conf"
+buildworld()
+{
+    cd $RUN_DIR
+    patch -p0 < src.patch
+    assert_cmd "patch -p0 < src.patch"
+    patch -p0 < makefile_step1.patch
+    assert_cmd "patch -p0 < makefile_step1.patch"
+
+    cd /usr/src
+    run_cmd "make clean"
+    run_cmd "rm -rf /usr/obj/*"
+    cputs "begin to buildworld step 1"
+    make buildworld > ~/buildworld_step1.log 2>&1
+    assert_cmd "make buildworld > ~/buildworld_step1.log 2>&1"
+    cd $RUN_DIR
+    patch -p0 -R < makefile_step1.patch
+    assert_cmd "patch -p0 -R < makefile_step1.patch"
+
+    sed -i "" '/CC=/d' /etc/make.conf
+    assert_cmd "sed -i '' '/CC=/d' /etc/make.conf"
+    sed -i "" '/CXX=/d' /etc/make.conf
+    assert_cmd "sed -i '' '/CXX=/d' /etc/make.conf"
+    sed -i "" '/CFLAGS/d' /etc/make.conf
+    assert_cmd "sed -i "" '/CFLAGS/d' /etc/make.conf"
+    patch -p0 < makefile_step2.patch
+    assert_cmd "patch -p0 < makefile_step2.patch"
+    cd /usr/src
+    cputs "begin to buildworld step 2"
+    make NO_CLEAN=yes buildworld > ~/buildworld_step2.log 2>&1
+    assert_cmd "make NO_CLEAN=yes buildworld > ~/buildworld_step2.log 2>&1"
+
+    cd $RUN_DIR
+    patch -p0 -R < src.patch
+    assert_cmd "patch -p0 -R < src.patch"
+    patch -p0 -R < makefile_step2.patch
+    assert_cmd "patch -p0 -R < makefile_step2.patch"
+}
 
 # }}}
-# {{{ src.conf
+# {{{ build kernel
 
-touch /etc/src.conf
-sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/src.conf
-cputs "sed -i.bak '/APPEND BY buildenv.sh/,/EOL [buildenv.sh]/d' /etc/src.conf"
-cat append_src.txt >> /etc/src.conf
-cputs "cat append_src.txt >> /etc/src.conf"
+buildkernel()
+{
+    cd /usr/src
+    echo 'CC=/lib/gcc46/bin/cc' >> /etc/make.conf
+    echo 'CXX=/lib/gcc46/bin/g++' >> /etc/make.conf
+    run_cmd "cp DOG /usr/src/sys/amd64/conf"
+    make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
+    assert_cmd "make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1"
+}
 
 # }}}
-# }}}
 
-# {{{ md5 check
-md5_check "/usr/include/openssl/ssl.h" "19588a1c8a27ab814ab6d52843e36cc1"
-md5_check "/usr/include/openssl/ssl3.h" "b9d8d0222a7fba6be5abd77099f6ada2"
-md5_check "/usr/src/Makefile.inc1" "e1e184f56d8321b4b3531103864e5ce8"
-md5_check "/usr/src/sbin/hastd/pjdlog.c" "991b375cd7c3822ad0d9d7eb133fb601"
-md5_check "/usr/src/sys/boot/i386/Makefile.inc" "247c077b00fb21a12d3b576c3436db24"
-md5_check "/usr/src/sys/boot/i386/boot2/Makefile" "3e062164e7b28c9b42cb7194e9cc7cd9"
-# }}}
+install_packages
+install_gcc
+update_src_tree
+md5_check
+update_config
+buildworld
+buildkernel
 
-patch -p0 < src.patch
-assert_cmd "patch -p0 < src.patch"
-patch -p0 < makefile_step1.patch
-assert_cmd "patch -p0 < makefile_step1.patch"
-
-cd /usr/src
-run_cmd "make clean"
-run_cmd "rm -rf /usr/obj/*"
-cputs "begin to buildworld step 1"
-make buildworld > ~/buildworld_step1.log 2>&1
-assert_cmd "make buildworld > ~/buildworld_step1.log 2>&1"
-cd $RUN_DIR
-patch -p0 -R < makefile_step1.patch
-assert_cmd "patch -p0 -R < makefile_step1.patch"
-
-sed -i "" '/CC=/d' /etc/make.conf
-assert_cmd "sed -i '' '/CC=/d' /etc/make.conf"
-sed -i "" '/CXX=/d' /etc/make.conf
-assert_cmd "sed -i '' '/CXX=/d' /etc/make.conf"
-patch -p0 < makefile_step2.patch
-assert_cmd "patch -p0 < makefile_step2.patch"
-cd /usr/src
-cputs "begin to buildworld step 2"
-make NO_CLEAN=yes buildworld > ~/buildworld_step2.log 2>&1
-assert_cmd "make NO_CLEAN=yes buildworld > ~/buildworld_step2.log 2>&1"
-
-cd $RUN_DIR
-patch -p0 -R < src.patch
-assert_cmd "patch -p0 -R < src.patch"
-patch -p0 -R < makefile_step2.patch
-assert_cmd "patch -p0 -R < makefile_step2.patch"
-
-echo 'CC=/lib/gcc46/bin/cc' >> /etc/make.conf
-echo 'CXX=/lib/gcc46/bin/g++' >> /etc/make.conf
-run_cmd "cp DOG /usr/src/sys/amd64/conf"
-make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
-assert_cmd "make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1"
 # vim: foldmethod=marker
