@@ -202,8 +202,8 @@ buildworld()
     assert_cmd "sed -i '' '/CC=/d' /etc/make.conf"
     sed -i "" '/CXX=/d' /etc/make.conf
     assert_cmd "sed -i '' '/CXX=/d' /etc/make.conf"
-    sed -i "" '/CFLAGS/d' /etc/make.conf
-    assert_cmd "sed -i "" '/CFLAGS/d' /etc/make.conf"
+    sed -i "" 's/-march=native//' /etc/make.conf
+    assert_cmd "sed -i '' 's/-march=native//' /etc/make.conf"
     patch -p0 < makefile_step2.patch
     assert_cmd "patch -p0 < makefile_step2.patch"
     cd /usr/src
