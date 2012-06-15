@@ -122,7 +122,7 @@ update_src_tree()
     run_cmd "cp /usr/share/examples/cvsup/stable-supfile ."
     sed -i.bak 's/CHANGE_THIS/cvsup3/' ports-supfile
     sed -i.bak 's/RELENG_9/RELENG_9_0/' stable-supfile
-    sed -i.bak 's/CHANGE_THIS/cvsup/' stable-supfile
+    sed -i.bak 's/CHANGE_THIS/cvsup4/' stable-supfile
     run_cmd "cvsup -g -L 2 stable-supfile"
     run_cmd "cvsup -g -L 2 ports-supfile"
 }
