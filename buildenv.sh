@@ -1,6 +1,6 @@
 #!/bin/sh
 
-KERNCONF='DOG'
+KERNCONF=$1
 
 RUN_DIR=`pwd`
 export LANG="C"
@@ -234,22 +234,40 @@ buildkernel()
     echo '# ------------------ EOL [buildenv.sh] ---------------------' >> /etc/make.conf
 
     cd $RUN_DIR
-    run_cmd "cp DOG /usr/src/sys/amd64/conf/"
+    run_cmd "cp $KERNCONF /usr/src/sys/amd64/conf/"
 
     cd /usr/src
-    make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
-    assert_cmd "make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1"
+    make buildkernel KERNCONF=$KERNCONF > ~/buildkernel.log 2>&1
+    assert_cmd "make buildkernel KERNCONF=$KERNCONF > ~/buildkernel.log 2>&1"
 }
 
 # }}}
+# {{{ show_messages
 
 show_messages()
 {
+    cputs "0. KERNCONF = $KERNCONF"
     cputs "1. PACKAGEROOT is $PACKAGEROOT"
     cputs "2. Don't leave until VIM is installed"
 
     read key
 }
+
+# }}}
+# {{{ last_messages
+
+last_messages()
+{
+    cputs "Next steps:"
+    gputs "  1. make installkernel KERNCONF=$KERNCONF"
+    gputs "  2. Reboot into single user mode"
+    gputs "  3. mergemaster -p"
+    gputs "  4. make installworld"
+    gputs "  5. mergemaster"
+    gputs "  6. reboot"
+}
+
+# }}}
 
 show_messages
 install_packages
@@ -258,5 +276,6 @@ update_src_tree
 md5_check
 buildworld
 buildkernel
+last_messages
 
 # vim: foldmethod=marker
