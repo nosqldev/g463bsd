@@ -72,11 +72,11 @@ assert_cmd()
 
 install_packages()
 {
-    run_cmd "pkg_add -r git"
-    run_cmd "pkg_add -r screen"
     cd /usr/ports/editors/vim
     gputs "cd /usr/ports/editors/vim"
     run_cmd "make NO_GUI=yes WITH_CSCOPE=yes install clean"
+    run_cmd "pkg_add -r git"
+    run_cmd "pkg_add -r screen"
     run_cmd "pkg_add -r cvsup-without-gui"
     run_cmd "pkg_add -r wget"
     run_cmd "pkg_add -r lftp"
@@ -234,7 +234,7 @@ buildkernel()
     echo '# ------------------ EOL [buildenv.sh] ---------------------' >> /etc/make.conf
 
     cd $RUN_DIR
-    run_cmd "cp DOG /usr/src/sys/amd64/conf"
+    run_cmd "cp DOG /usr/src/sys/amd64/conf/"
 
     cd /usr/src
     make buildkernel KERNCONF=DOG > ~/buildkernel.log 2>&1
@@ -243,6 +243,15 @@ buildkernel()
 
 # }}}
 
+show_messages()
+{
+    cputs "1. PACKAGEROOT is $PACKAGEROOT"
+    cputs "2. Don't leave until VIM is installed"
+
+    read key
+}
+
+show_messages
 install_packages
 install_gcc
 update_src_tree
