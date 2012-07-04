@@ -97,9 +97,16 @@ install_packages()
 install_gcc()
 {
     cd
-    run_cmd "mkdir gcc"
+
+    if [ ! -d gcc ]
+    then
+        run_cmd "mkdir gcc"
+        cd gcc
+        run_cmd "wget ftp://ftp.dti.ad.jp/pub/lang/gcc/releases/gcc-4.6.3/gcc-4.6.3.tar.bz2"
+    fi
+
+    cd
     cd gcc
-    run_cmd "wget ftp://ftp.dti.ad.jp/pub/lang/gcc/releases/gcc-4.6.3/gcc-4.6.3.tar.bz2"
     run_cmd "tar xfvj gcc-4.6.3.tar.bz2"
 
     cd
